@@ -571,7 +571,7 @@
         (function moveCursor() {
             const dx = tgtX - curX, dy = tgtY - curY;
             if (Math.abs(dx) > 0.05 || Math.abs(dy) > 0.05) {
-                curX += dx * 0.25; curY += dy * 0.25;
+                curX += dx * 0.6; curY += dy * 0.6;
                 cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
             }
             requestAnimationFrame(moveCursor);
