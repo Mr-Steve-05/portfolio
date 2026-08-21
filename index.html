@@ -26,7 +26,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        @media (pointer: fine) { * { cursor: none; } }
+        @media (pointer: fine) { * { cursor: none !important; } }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -566,16 +566,16 @@
         });
 
         const cursor = document.getElementById('cursor-dot');
-        let curX = 0, curY = 0, cursorRaf = null;
-        window.addEventListener('mousemove', e => {
-            curX = e.clientX; curY = e.clientY;
-            if (cursorRaf === null) {
-                cursorRaf = requestAnimationFrame(() => {
-                    cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
-                    cursorRaf = null;
-                });
+        let curX = window.innerWidth / 2, curY = window.innerHeight / 2, tgtX = curX, tgtY = curY;
+        window.addEventListener('mousemove', e => { tgtX = e.clientX; tgtY = e.clientY; }, { passive: true });
+        (function moveCursor() {
+            const dx = tgtX - curX, dy = tgtY - curY;
+            if (Math.abs(dx) > 0.05 || Math.abs(dy) > 0.05) {
+                curX += dx * 0.25; curY += dy * 0.25;
+                cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
             }
-        }, { passive: true });
+            requestAnimationFrame(moveCursor);
+        })();
 
         const interactables = document.querySelectorAll('.nav-links span, .video-card, .sound-card, .coverflow-item, .contact-btn, .lightbox-close');
         interactables.forEach(el => {
@@ -676,27 +676,25 @@
         let startX = 0, startY = 0; let isDragging = false; let hasSwiped = false;
 
         cvWrapper.addEventListener('pointerdown', (e) => {
-            isDragging = true; hasSwiped = false; 
+            isDragging = true; hasSwiped = false;
             startX = e.clientX; startY = e.clientY;
-            cvWrapper.style.cursor = 'grabbing';
         });
 
         cvWrapper.addEventListener('pointermove', (e) => {
             if (!isDragging) return;
             const diffX = startX - e.clientX;
             const diffY = startY - e.clientY;
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 15) { 
-                hasSwiped = true; 
-                cvWrapper.setPointerCapture(e.pointerId); 
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 15) {
+                hasSwiped = true;
+                cvWrapper.setPointerCapture(e.pointerId);
             } else if (Math.abs(diffY) > 15) {
                 isDragging = false;
-                cvWrapper.style.cursor = 'auto';
             }
         });
 
         cvWrapper.addEventListener('pointerup', (e) => {
             if (!isDragging) return;
-            isDragging = false; cvWrapper.releasePointerCapture(e.pointerId); cvWrapper.style.cursor = 'auto';
+            isDragging = false; cvWrapper.releasePointerCapture(e.pointerId);
             const diffX = startX - e.clientX;
             if (hasSwiped) {
                 if (diffX > 40 && cvIndex < cvItems.length - 1) { cvIndex++; updateCV(); } 
