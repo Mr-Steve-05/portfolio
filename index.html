@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Steve FX - Professional Video Editor Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Oswald:wght@400;500;700&family=Inter:ital,wght@0,300;0,400;0,600;0,800;1,400;1,600&display=swap" rel="stylesheet">
     
     <style>
@@ -64,12 +66,13 @@
         /* --- UI ELEMENTS --- */
         .timeline-playhead { position: fixed; top: 0; left: 0; width: 100vw; height: 4px; background: var(--accent); z-index: 9999; transform-origin: left; transform: scaleX(0); box-shadow: 0 0 15px var(--accent); will-change: transform; }
         
-        .cursor-dot { position: fixed; top: 0; left: 0; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 100000; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--accent); transition: transform 0.2s ease, background 0.2s ease, border 0.2s ease; will-change: transform, left, top; }
-        .cursor-dot.hovering { transform: translate(-50%, -50%) scale(3.5); background: transparent; border: 1px solid var(--accent); box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); }
+        .cursor-dot { position: fixed; top: -4px; left: -4px; width: 8px; height: 8px; pointer-events: none; z-index: 100000; will-change: transform; }
+        .cursor-dot::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), background 0.2s ease, box-shadow 0.2s ease; }
+        .cursor-dot.hovering::before { transform: scale(3.5); background: transparent; box-shadow: inset 0 0 0 1px var(--accent), 0 0 15px rgba(0, 210, 255, 0.2); }
         @media (hover: none) and (pointer: coarse) { .cursor-dot { display: none !important; } * { cursor: auto !important; } }
 
         /* --- LIQUID GLASS NAV --- */
-        nav { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 800px; padding: 1.2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; color: white; font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; background: rgba(20, 20, 20, 0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.02); }
+        nav { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 800px; padding: 1.2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; color: white; font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; background: rgba(20, 20, 20, 0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.02); }
         .nav-brand { font-family: 'Oswald', sans-serif; font-size: 1.1rem; letter-spacing: 2px; }
         .nav-links { display: flex; align-items: center; position: relative; }
         .nav-hover-pill { position: absolute; top: 50%; left: 0; transform: translateY(-50%); height: 38px; width: 0px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.35); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.05); border-radius: 30px; opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 0; }
@@ -79,8 +82,8 @@
         /* --- HERO SECTION --- */
         .sticky-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 10; background-color: #050505; background-image: url('bg-texture.jpg'); background-size: cover; background-position: center; }
         
-        .motion-canvas { position: absolute; top: -20vh; left: 0; width: 100%; height: 140vh; z-index: 0; pointer-events: none; opacity: 0.25; mix-blend-mode: screen; background: repeating-linear-gradient(135deg, transparent 0%, transparent 38%, rgba(255, 255, 255, 0.05) 42%, rgba(200, 205, 210, 0.4) 46%, rgba(255, 255, 255, 0.7) 50%, rgba(100, 105, 110, 0.5) 54%, rgba(20, 25, 30, 0.8) 58%, transparent 62%, transparent 100%); background-size: 150% 150%; animation: gradientWipeMotion 6s linear infinite; will-change: transform; }
-        @keyframes gradientWipeMotion { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+        .motion-canvas { position: absolute; top: -20vh; left: -50%; width: 200%; height: 140vh; z-index: 0; pointer-events: none; opacity: 0.25; mix-blend-mode: screen; background: repeating-linear-gradient(135deg, transparent 0%, transparent 38%, rgba(255, 255, 255, 0.05) 42%, rgba(200, 205, 210, 0.4) 46%, rgba(255, 255, 255, 0.7) 50%, rgba(100, 105, 110, 0.5) 54%, rgba(20, 25, 30, 0.8) 58%, transparent 62%, transparent 100%); background-size: 150% 150%; animation: gradientWipeMotion 8s linear infinite; will-change: transform; }
+        @keyframes gradientWipeMotion { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12.5%, -10%, 0); } }
 
         .massive-title { position: absolute; width: 100%; display: flex; justify-content: center; font-family: 'Oswald', sans-serif; font-size: clamp(6rem, 18vw, 22rem); font-weight: 700; line-height: 0.8; text-transform: uppercase; letter-spacing: -4px; z-index: 1; white-space: nowrap; text-shadow: 0 10px 30px rgba(0,0,0,0.5); will-change: transform, opacity; }
         .title-left { color: var(--text-light); }
@@ -89,7 +92,7 @@
         .center-graphic { position: absolute; width: 90vw; max-width: 400px; aspect-ratio: 4/5; height: auto; z-index: 5; overflow: hidden; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); will-change: transform, opacity; }
         .center-graphic img { width: 100%; height: 100%; object-fit: cover; opacity: 1; transform: scale(1.0); }
 
-        .badge { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 6; font-family: 'Inter', sans-serif; font-weight: 800; will-change: transform, opacity; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(255, 255, 255, 0.05); }
+        .badge { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 6; font-family: 'Inter', sans-serif; font-weight: 800; will-change: transform, opacity; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(255, 255, 255, 0.05); }
         .badge-ae { width: clamp(60px, 12vw, 100px); height: clamp(60px, 12vw, 100px); top: 20%; left: 10%; background: rgba(0, 0, 92, 0.4); color: var(--color-ae-text); border: 1px solid rgba(153, 153, 255, 0.4); border-top: 1px solid rgba(153, 153, 255, 0.8); font-size: clamp(1.2rem, 3vw, 2.2rem); }
         .badge-pr { width: clamp(60px, 12vw, 100px); height: clamp(60px, 12vw, 100px); top: 68%; left: 20%; background: rgba(0, 0, 92, 0.4); color: var(--color-pr-text); border: 1px solid rgba(234, 119, 255, 0.4); border-top: 1px solid rgba(234, 119, 255, 0.8); font-size: clamp(1.2rem, 3vw, 2.2rem); }
         .badge-dv { width: clamp(65px, 13vw, 110px); height: clamp(65px, 13vw, 110px); top: 38%; right: 10%; background-image: url('DV.jpg'); background-size: 110%; background-position: center; border: 2px solid rgba(255, 255, 255, 0.2); border-top: 2px solid rgba(70, 230, 255, 0.6); }
@@ -196,9 +199,10 @@
         .category-header h3 span { color: var(--accent); font-weight: 400; font-size: 2rem; margin-right: 15px; vertical-align: middle; }
 
         .coverflow-wrapper { position: relative; width: 100%; height: 550px; display: flex; align-items: center; justify-content: center; perspective: 1500px; overflow: hidden; touch-action: pan-y; user-select: none; }
-        .coverflow-item { position: absolute; width: 320px; height: 420px; border-radius: 12px; background: #111; overflow: hidden; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.05); cursor: pointer; pointer-events: none; }
+        .coverflow-item { position: absolute; width: 320px; height: 420px; border-radius: 12px; background: #111; overflow: hidden; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.05); cursor: pointer; pointer-events: auto; }
         .coverflow-item .parallax-wrap img { opacity: 0.4; }
-        .coverflow-item.active { border-color: var(--accent); box-shadow: 0 0 50px rgba(0, 210, 255, 0.2); pointer-events: auto; }
+        .coverflow-item.active { border-color: var(--accent); box-shadow: 0 0 50px rgba(0, 210, 255, 0.2); pointer-events: auto; animation: cvPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes cvPop { 0% { scale: 0.78; } 55% { scale: 1.06; } 100% { scale: 1; } }
         .coverflow-item.active .parallax-wrap img { opacity: 1; }
 
         /* --- VIDEO GRID --- */
@@ -262,6 +266,10 @@
             nav { padding: 1.2rem 6vw; width: 95%; top: 15px; letter-spacing: 2px; }
             .nav-links span { margin-left: 12px; font-size: 0.75rem; padding: 5px 8px; } 
         }
+        @media (prefers-reduced-motion: reduce) {
+            .motion-canvas, .skill-icon, .spark { animation: none !important; }
+            .scatter-word { transition: none; opacity: 1; transform: none; filter: none; }
+        }
     </style>
 </head>
 <body>
@@ -281,7 +289,7 @@
     </nav>
 
     <div class="sticky-container">
-        <div class="motion-canvas" data-speed="0.2"></div>
+        <div class="motion-canvas"></div>
         <div class="massive-title">
             <div class="title-left" id="text-left">STEVE</div>
             <div class="title-right" id="text-right">FX</div>
@@ -290,7 +298,7 @@
         <div class="badge badge-pr" id="badge-pr">PR</div>
         <div class="badge badge-dv" id="badge-dv"></div>
         <div class="center-graphic" id="center-graphic">
-            <img src="profile.jpg" alt="Steve FX Portrait">
+            <img src="profile.jpg" alt="Steve FX Portrait" fetchpriority="high" decoding="async">
         </div>
     </div>
 
@@ -314,7 +322,7 @@
                         <div class="spark s4"></div>
                         <div class="profile-img-container">
                             <div class="parallax-wrap">
-                                <img src="profile.jpg" alt="Steve FX Portrait">
+                                <img src="profile.jpg" alt="Steve FX Portrait" loading="lazy" decoding="async">
                             </div>
                         </div>
                     </div>
@@ -369,13 +377,13 @@
                 <div class="category-header"><h3 class="scatter-target"><span>01 //</span> Top Showreel</h3></div>
                 <div class="coverflow-wrapper" id="coverflow-wrapper">
                     <div class="coverflow-item" tabindex="0" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
-                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1521133573892-e44906baee46?q=80&w=800&auto=format&fit=crop" alt="Showreel 1"></div>
+                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1521133573892-e44906baee46?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="Showreel 1"></div>
                     </div>
                     <div class="coverflow-item" tabindex="0" data-video="https://player.vimeo.com/video/76979871">
-                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=800&auto=format&fit=crop" alt="Showreel 2"></div>
+                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="Showreel 2"></div>
                     </div>
                     <div class="coverflow-item" tabindex="0" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
-                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=800&auto=format&fit=crop" alt="Showreel 3"></div>
+                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="Showreel 3"></div>
                     </div>
                 </div>
             </section>
@@ -384,7 +392,7 @@
                 <div class="category-header"><h3 class="scatter-target"><span>02 //</span> Motion Design</h3></div>
                 <div class="video-grid">
                     <div class="video-card" tabindex="0" data-video="https://player.vimeo.com/video/76979871">
-                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop" alt="Abstract Motion"></div>
+                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="Abstract Motion"></div>
                         <div class="video-card-overlay">
                             <div class="play-btn"><div class="play-icon"></div></div>
                             <div class="video-card-text">
@@ -394,7 +402,7 @@
                         </div>
                     </div>
                     <div class="video-card" tabindex="0" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
-                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" alt="3D Environment"></div>
+                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="3D Environment"></div>
                         <div class="video-card-overlay">
                             <div class="play-btn"><div class="play-icon"></div></div>
                             <div class="video-card-text">
@@ -410,7 +418,7 @@
                 <div class="category-header"><h3 class="scatter-target"><span>03 //</span> Kinetic Typography</h3></div>
                 <div class="video-grid">
                     <div class="video-card" tabindex="0" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
-                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1555448248-2571daf6344b?q=80&w=800&auto=format&fit=crop" alt="Kinetic Text"></div>
+                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1555448248-2571daf6344b?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="Kinetic Text"></div>
                         <div class="video-card-overlay">
                             <div class="play-btn"><div class="play-icon"></div></div>
                             <div class="video-card-text">
@@ -420,7 +428,7 @@
                         </div>
                     </div>
                     <div class="video-card" tabindex="0" data-video="https://player.vimeo.com/video/76979871">
-                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=800&auto=format&fit=crop" alt="3D Text"></div>
+                        <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="3D Text"></div>
                         <div class="video-card-overlay">
                             <div class="play-btn"><div class="play-icon"></div></div>
                             <div class="video-card-text">
@@ -558,12 +566,16 @@
         });
 
         const cursor = document.getElementById('cursor-dot');
+        let curX = 0, curY = 0, cursorRaf = null;
         window.addEventListener('mousemove', e => {
-            if (cursor.style.display !== 'none') {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
+            curX = e.clientX; curY = e.clientY;
+            if (cursorRaf === null) {
+                cursorRaf = requestAnimationFrame(() => {
+                    cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
+                    cursorRaf = null;
+                });
             }
-        });
+        }, { passive: true });
 
         const interactables = document.querySelectorAll('.nav-links span, .video-card, .sound-card, .coverflow-item, .contact-btn, .lightbox-close');
         interactables.forEach(el => {
@@ -583,63 +595,54 @@
         const speedElements = document.querySelectorAll('[data-speed]');
         const parallaxWraps = document.querySelectorAll('.parallax-wrap');
 
-        let currentScroll = 0, targetScroll = 0;
-        window.addEventListener('scroll', () => targetScroll = window.scrollY);
+        let currentScroll = 0, targetScroll = window.scrollY;
+        let cachedTotalHeight = 1;
+        const measure = () => { cachedTotalHeight = Math.max(1, document.body.scrollHeight - window.innerHeight); };
+        window.addEventListener('scroll', () => targetScroll = window.scrollY, { passive: true });
+        window.addEventListener('resize', measure);
+        window.addEventListener('load', measure);
+        measure();
 
+        let lastApplied = -1;
         function render() {
-            const phase = window.innerHeight * 0.8; 
-            const thresholdPassed = currentScroll > phase * 2;
-            const isSettled = Math.abs(targetScroll - currentScroll) < 0.5;
-
-            if (thresholdPassed && isSettled) {
-                let totalHeight = document.body.scrollHeight - window.innerHeight;
-                playhead.style.transform = `scaleX(${targetScroll / totalHeight})`;
-                requestAnimationFrame(render);
-                return;
-            }
-
             currentScroll += (targetScroll - currentScroll) * 0.07;
-            let totalHeight = document.body.scrollHeight - window.innerHeight;
-            playhead.style.transform = `scaleX(${currentScroll / totalHeight})`;
+            if (Math.abs(targetScroll - currentScroll) < 0.1) currentScroll = targetScroll;
 
-            let progress = Math.min(currentScroll / phase, 1);
-            let exit = Math.min(progress * 2.5, 1);
+            if (currentScroll !== lastApplied) {
+                lastApplied = currentScroll;
+                playhead.style.transform = `scaleX(${currentScroll / cachedTotalHeight})`;
 
-            textLeft.style.transform = `translateX(${-exit * 50}vw)`; 
-            textRight.style.transform = `translateX(${exit * 50}vw)`; 
-            centerGraphic.style.transform = `scale(${Math.max(0.8, 1 - exit * 0.2)})`;
-            contentLayer.style.transform = `translateY(${Math.max(0, 100 - (progress * 100))}vh)`;
-            
-            if (exit > 0) {
-                textLeft.style.opacity = 1 - exit;
-                textRight.style.opacity = 1 - exit;
-                centerGraphic.style.opacity = 1 - exit;
-            } else {
-                textLeft.style.opacity = 1;
-                textRight.style.opacity = 1;
-                centerGraphic.style.opacity = 1;
+                const phase = window.innerHeight * 0.8;
+                let progress = Math.min(currentScroll / phase, 1);
+                let exit = Math.min(progress * 2.5, 1);
+                let fade = 1 - exit;
+
+                textLeft.style.transform = `translateX(${-exit * 50}vw)`;
+                textRight.style.transform = `translateX(${exit * 50}vw)`;
+                centerGraphic.style.transform = `scale(${Math.max(0.8, 1 - exit * 0.2)})`;
+                contentLayer.style.transform = `translateY(${Math.max(0, 100 - (progress * 100))}vh)`;
+                textLeft.style.opacity = fade;
+                textRight.style.opacity = fade;
+                centerGraphic.style.opacity = fade;
+
+                badges.forEach((b, i) => {
+                    b.style.opacity = fade;
+                    b.style.transform = `translate(${(i-1)*exit*100}%, ${exit*80}%) scale(${1-exit}) rotate(${exit * 45}deg)`;
+                });
+
+                speedElements.forEach(el => {
+                    el.style.transform = `translateY(${currentScroll * parseFloat(el.getAttribute('data-speed'))}px)`;
+                });
+
+                const viewHeight = window.innerHeight;
+                parallaxWraps.forEach(wrap => {
+                    const rect = wrap.parentElement.getBoundingClientRect();
+                    if(rect.top < viewHeight && rect.bottom > 0) {
+                        const viewProgress = ((rect.top + rect.height / 2) - viewHeight / 2) / (viewHeight / 2);
+                        wrap.style.setProperty('--py', `${viewProgress * 12}%`);
+                    }
+                });
             }
-            
-            badges.forEach((b, i) => {
-                if (exit > 0) b.style.opacity = 1 - exit;
-                else b.style.opacity = 1;
-                b.style.transform = `translate(${(i-1)*exit*100}%, ${exit*80}%) scale(${1-exit}) rotate(${exit * 45}deg)`;
-            });
-
-            speedElements.forEach(el => {
-                const speed = parseFloat(el.getAttribute('data-speed'));
-                el.style.transform = `translateY(${currentScroll * speed}px)`;
-            });
-
-            const viewHeight = window.innerHeight;
-            parallaxWraps.forEach(wrap => {
-                const parent = wrap.parentElement;
-                const rect = parent.getBoundingClientRect();
-                if(rect.top < viewHeight && rect.bottom > 0) {
-                    const viewProgress = ((rect.top + rect.height / 2) - viewHeight / 2) / (viewHeight / 2);
-                    wrap.style.setProperty('--py', `${viewProgress * 12}%`); 
-                }
-            });
 
             requestAnimationFrame(render);
         }
