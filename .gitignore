@@ -7,3 +7,6 @@ DV2.png
 profile1.jpg
 profile2.jpg
 Gemini_Generated_Image_*.png
+
+.vercel
+.env*
