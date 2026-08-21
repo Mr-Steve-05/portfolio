@@ -201,7 +201,8 @@
         .icon-ps { background: #001e36; color: #31a8ff; border: 2px solid #31a8ff; animation-delay: 0.8s; }
 
         .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        .timeline-item { padding-left: 1.5rem; border-left: 2px solid var(--accent); } 
+        .timeline-item { padding-left: 1.5rem; border-left: 2px solid var(--accent); }
+        .timeline-item + .timeline-item { margin-top: 1.5rem; } 
         .timeline-item .date { font-family: 'Inter', sans-serif; font-style: italic; font-weight: 600; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; display: block; letter-spacing: 2px; }
         .timeline-item h4 { font-family: 'Oswald', sans-serif; font-size: 1.2rem; font-weight: 500; margin-bottom: 0.4rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;}
         .timeline-item p { font-size: 0.9rem; text-transform: none; letter-spacing: 0px; }
@@ -365,21 +366,17 @@
                         </div>
                     </div>
 
-                    <div class="about-grid">
-                        <div class="about-block">
-                            <h3>Education</h3>
-                            <div class="timeline-item">
-                                <span class="date">2023 - Present</span>
-                                <h4>Not Just a Video Editing Cohort 6.0</h4>
-                                <p>Mentored by Tharun Speaks. Learning and sharpening the craft ever since.</p>
-                            </div>
+                    <div class="about-block">
+                        <h3>Experience</h3>
+                        <div class="timeline-item">
+                            <span class="date">2023 - Present</span>
+                            <h4>Not Just a Video Editing Cohort 6.0</h4>
+                            <p>Mentored by Tharun Speaks. Learning and sharpening the craft ever since.</p>
                         </div>
-                        <div class="about-block">
-                            <h3>Experience</h3>
-                            <div class="timeline-item">
-                                <span class="date">Present</span>
-                                <h4>Freelance Video Editor</h4>
-                            </div>
+                        <div class="timeline-item">
+                            <span class="date">Present</span>
+                            <h4>Freelance Video Editor</h4>
+                            <p>Cutting high-impact commercial and cinematic sequences for clients.</p>
                         </div>
                     </div>
 
