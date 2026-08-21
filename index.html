@@ -566,16 +566,16 @@
         });
 
         const cursor = document.getElementById('cursor-dot');
-        let curX = window.innerWidth / 2, curY = window.innerHeight / 2, tgtX = curX, tgtY = curY;
-        window.addEventListener('mousemove', e => { tgtX = e.clientX; tgtY = e.clientY; }, { passive: true });
-        (function moveCursor() {
-            const dx = tgtX - curX, dy = tgtY - curY;
-            if (Math.abs(dx) > 0.05 || Math.abs(dy) > 0.05) {
-                curX += dx * 0.6; curY += dy * 0.6;
-                cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
+        let curX = window.innerWidth / 2, curY = window.innerHeight / 2, cursorRaf = null;
+        window.addEventListener('mousemove', e => {
+            curX = e.clientX; curY = e.clientY;
+            if (cursorRaf === null) {
+                cursorRaf = requestAnimationFrame(() => {
+                    cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
+                    cursorRaf = null;
+                });
             }
-            requestAnimationFrame(moveCursor);
-        })();
+        }, { passive: true });
 
         const interactables = document.querySelectorAll('.nav-links span, .video-card, .sound-card, .coverflow-item, .contact-btn, .lightbox-close');
         interactables.forEach(el => {
