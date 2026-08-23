@@ -57,7 +57,6 @@
         .video-card:focus-visible, .sound-card:focus-visible, .coverflow-item:focus-visible { outline-offset: 8px; }
 
         ::selection { background: var(--accent); color: #04121a; }
-        html { scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #060607; }
         ::-webkit-scrollbar-thumb { background: #23262b; border-radius: 6px; border: 2px solid #060607; }
@@ -93,7 +92,7 @@
         @media (hover: none) and (pointer: coarse) { .cursor-dot { display: none !important; } * { cursor: auto !important; } }
 
         /* --- LIQUID GLASS NAV --- */
-        nav { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 800px; padding: 1.2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; color: white; font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; background: rgba(20, 20, 20, 0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.02); }
+        nav { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 800px; padding: 1.2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; color: white; font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; background: rgba(20, 20, 20, 0.35); backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.02); }
         .nav-brand { font-family: 'Oswald', sans-serif; font-size: 1.1rem; letter-spacing: 2px; }
         .nav-links { display: flex; align-items: center; position: relative; }
         .nav-hover-pill { position: absolute; top: 50%; left: 0; transform: translateY(-50%); height: 38px; width: 0px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.35); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.05); border-radius: 30px; opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 0; }
@@ -104,6 +103,7 @@
         .sticky-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 10; background-color: #050505; background-image: url('bg-texture.jpg'); background-size: cover; background-position: center; }
         
         .motion-canvas { position: absolute; top: -20vh; left: -50%; width: 200%; height: 140vh; z-index: 0; pointer-events: none; opacity: 0.25; mix-blend-mode: screen; background: repeating-linear-gradient(135deg, transparent 0%, transparent 38%, rgba(255, 255, 255, 0.05) 42%, rgba(200, 205, 210, 0.4) 46%, rgba(255, 255, 255, 0.7) 50%, rgba(100, 105, 110, 0.5) 54%, rgba(20, 25, 30, 0.8) 58%, transparent 62%, transparent 100%); background-size: 150% 150%; animation: gradientWipeMotion 8s linear infinite; will-change: transform; }
+        .hero-gone .motion-canvas { animation-play-state: paused; visibility: hidden; }
         @keyframes gradientWipeMotion { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12.5%, -10%, 0); } }
 
         .massive-title { position: absolute; width: 100%; display: flex; justify-content: center; font-family: 'Oswald', sans-serif; font-size: clamp(6rem, 18vw, 22rem); font-weight: 700; line-height: 0.8; text-transform: uppercase; letter-spacing: -4px; z-index: 1; white-space: nowrap; text-shadow: 0 10px 30px rgba(0,0,0,0.5); will-change: transform, opacity; }
@@ -284,6 +284,7 @@
         .marquee-band { overflow: hidden; white-space: nowrap; padding: 2.2rem 0; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); background: rgba(255, 255, 255, 0.015); position: relative; z-index: 2; }
         .marquee-track { display: inline-flex; align-items: baseline; animation: marqueeMove 26s linear infinite; will-change: transform; }
         .marquee-band.rev .marquee-track { animation-direction: reverse; }
+        .marquee-band.paused .marquee-track { animation-play-state: paused; }
         .marquee-track span { font-family: 'Oswald', sans-serif; font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 700; text-transform: uppercase; letter-spacing: 4px; padding-right: 3rem; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.28); }
         .marquee-track span.solid { color: var(--accent); -webkit-text-stroke: 0; }
         @keyframes marqueeMove { to { transform: translateX(-50%); } }
@@ -558,6 +559,7 @@
         function finishPreloader() {
             preEl.classList.add('done');
             document.body.classList.add('loaded');
+            setTimeout(measure, 120);
             setTimeout(() => preEl.remove(), 1000);
         }
 
@@ -679,17 +681,23 @@
         const parallaxWraps = document.querySelectorAll('.parallax-wrap');
 
         let currentScroll = 0, targetScroll = window.scrollY;
-        let cachedTotalHeight = 1;
-        const measure = () => { cachedTotalHeight = Math.max(1, document.body.scrollHeight - window.innerHeight); };
+        let cachedTotalHeight = 1, maxScrollCache = 1;
+        const measure = () => { cachedTotalHeight = Math.max(1, document.body.scrollHeight - window.innerHeight); maxScrollCache = Math.max(1, document.documentElement.scrollHeight - window.innerHeight); };
         window.addEventListener('scroll', () => targetScroll = window.scrollY, { passive: true });
         window.addEventListener('resize', measure);
         window.addEventListener('load', measure);
         measure();
 
-        let lastApplied = -1;
+        let lastApplied = -1, heroGone = false;
         function render() {
             currentScroll += (targetScroll - currentScroll) * 0.07;
             if (Math.abs(targetScroll - currentScroll) < 0.1) currentScroll = targetScroll;
+
+            const pastHero = currentScroll > window.innerHeight * 1.1;
+            if (pastHero !== heroGone) {
+                heroGone = pastHero;
+                document.body.classList.toggle('hero-gone', pastHero);
+            }
 
             if (currentScroll !== lastApplied) {
                 lastApplied = currentScroll;
@@ -844,6 +852,11 @@
         }), { threshold: 0.3 });
         document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
+        const marqueeObs = new IntersectionObserver(entries => entries.forEach(e => {
+            e.target.classList.toggle('paused', !e.isIntersecting);
+        }));
+        document.querySelectorAll('.marquee-band').forEach(b => marqueeObs.observe(b));
+
         if (!reduceMotion) {
             let sT = window.scrollY, sC = sT, gliding = false;
             const glide = () => {
@@ -856,7 +869,7 @@
                 if (e.ctrlKey || cvWrapper.contains(e.target)) return;
                 e.preventDefault();
                 const d = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;
-                sT = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, sT + d));
+                sT = Math.max(0, Math.min(maxScrollCache, sT + d));
                 if (!gliding) { gliding = true; requestAnimationFrame(glide); }
             }, { passive: false });
         }

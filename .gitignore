@@ -8,5 +8,9 @@ profile1.jpg
 profile2.jpg
 Gemini_Generated_Image_*.png
 
+# Reference media
+*.mp4
+
+
 .vercel
 .env*
