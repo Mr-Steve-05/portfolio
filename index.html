@@ -102,7 +102,7 @@
         .nav-links span:hover { color: var(--accent); }
 
         /* --- HERO SECTION --- */
-        .sticky-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 10; background-color: #050505; }
+        .sticky-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 10; background-color: #050505; }
         
         .hero-glow { position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 72vmin; height: 72vmin; border-radius: 50%; z-index: 0; pointer-events: none; background: radial-gradient(circle, rgba(0, 210, 255, 0.13) 0%, rgba(0, 210, 255, 0.04) 42%, transparent 70%); animation: glowBreath 7s ease-in-out infinite; will-change: transform, opacity; }
         @keyframes glowBreath { 50% { opacity: 0.55; transform: scale(1.1); } }
@@ -261,12 +261,12 @@
 
         /* --- CONTACT --- */
         .contact-section { text-align: center; padding: 10rem 5vw; border-top: 1px solid var(--border-subtle); margin-top: 5rem; }
-        .contact-section h2 { font-family: 'Oswald', sans-serif; font-size: 4rem; text-transform: uppercase; letter-spacing: 2px; }
+        .contact-section h2 { font-family: 'Oswald', sans-serif; font-size: clamp(2.2rem, 8vw, 4rem); text-transform: uppercase; letter-spacing: 2px; }
         .contact-btn { display: inline-block; padding: 1.5rem 3.5rem; border: 1px solid var(--accent); color: var(--accent); text-decoration: none; text-transform: uppercase; letter-spacing: 4px; transition: 0.3s; font-weight: 600; margin-top: 2rem; font-size: 0.9rem; }
         .contact-btn:hover { background: var(--accent); color: var(--bg-dark); }
 
         /* --- LIGHTBOX --- */
-        .lightbox { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 3, 3, 0.95); backdrop-filter: blur(10px); z-index: 99999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        .lightbox { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; background: rgba(3, 3, 3, 0.95); backdrop-filter: blur(10px); z-index: 99999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
         .lightbox.active { opacity: 1; pointer-events: auto; }
         .lightbox-content { width: 80%; max-width: 1200px; aspect-ratio: 16/9; }
         .lightbox-content iframe { width: 100%; height: 100%; border-radius: 8px; border: none; }
@@ -310,6 +310,11 @@
 
         .cv-dots { display: flex; justify-content: center; gap: 10px; padding: 0.5rem 0 2.5rem; position: relative; z-index: 5; }
         .cv-dot { width: 26px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.15); transition: background 0.3s ease, width 0.3s ease; border: 0; padding: 0; }
+        @media (pointer: coarse) {
+            .cv-dot { width: 34px; height: 14px; border-radius: 7px; background-clip: content-box; padding: 5px 0; }
+            .lightbox-content { width: 92%; }
+            .lightbox-close { top: 1rem; right: 1.2rem; font-size: 2.4rem; }
+        }
         .cv-dot.active { background: var(--accent); width: 42px; }
 
         .rise-in { transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
