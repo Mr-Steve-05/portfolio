@@ -102,11 +102,11 @@
         .nav-links span:hover { color: var(--accent); }
 
         /* --- HERO SECTION --- */
-        .sticky-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 10; background-color: #050505; background-image: url('bg-texture.jpg'); background-size: cover; background-position: center; }
+        .sticky-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 10; background-color: #050505; }
         
-        .motion-canvas { position: absolute; top: -20vh; left: -50%; width: 200%; height: 140vh; z-index: 0; pointer-events: none; opacity: 0.25; mix-blend-mode: screen; background: repeating-linear-gradient(135deg, transparent 0%, transparent 38%, rgba(255, 255, 255, 0.05) 42%, rgba(200, 205, 210, 0.4) 46%, rgba(255, 255, 255, 0.7) 50%, rgba(100, 105, 110, 0.5) 54%, rgba(20, 25, 30, 0.8) 58%, transparent 62%, transparent 100%); background-size: 150% 150%; animation: gradientWipeMotion 8s linear infinite; will-change: transform; }
-        .hero-gone .motion-canvas { animation-play-state: paused; visibility: hidden; }
-        @keyframes gradientWipeMotion { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12.5%, -10%, 0); } }
+        .hero-glow { position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 72vmin; height: 72vmin; border-radius: 50%; z-index: 0; pointer-events: none; background: radial-gradient(circle, rgba(0, 210, 255, 0.13) 0%, rgba(0, 210, 255, 0.04) 42%, transparent 70%); animation: glowBreath 7s ease-in-out infinite; will-change: transform, opacity; }
+        @keyframes glowBreath { 50% { opacity: 0.55; transform: scale(1.1); } }
+        .hero-gone .hero-glow { visibility: hidden; }
 
         .massive-title { position: absolute; width: 100%; display: flex; justify-content: center; font-family: 'Oswald', sans-serif; font-size: clamp(6rem, 18vw, 22rem); font-weight: 700; line-height: 0.8; text-transform: uppercase; letter-spacing: -4px; z-index: 1; white-space: nowrap; text-shadow: 0 10px 30px rgba(0,0,0,0.5); will-change: transform, opacity; }
         .title-left { color: var(--text-light); }
@@ -357,7 +357,7 @@
             .nav-links span { margin-left: 12px; font-size: 0.75rem; padding: 5px 8px; } 
         }
         @media (prefers-reduced-motion: reduce) {
-            .motion-canvas, .skill-icon, .spark, .marquee-track { animation: none !important; }
+            .motion-canvas, .hero-glow, .skill-icon, .spark, .marquee-track { animation: none !important; }
             .scatter-word { transition: none; opacity: 1; transform: none; filter: none; }
             .r-word { transition: none; transform: none; }
             .rise-in:not(.shown) { opacity: 1; transform: none; }
@@ -394,7 +394,7 @@
     </nav>
 
     <div class="sticky-container">
-        <div class="motion-canvas"></div>
+        <div class="hero-glow"></div>
         <div class="massive-title">
             <div class="title-left" id="text-left">STEVE</div>
             <div class="title-right" id="text-right">FX</div>
