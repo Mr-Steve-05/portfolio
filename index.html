@@ -293,6 +293,13 @@
         .r-word { display: inline-block; transform: translateY(115%); transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
         .reveal.in .r-word { transform: translateY(0); }
 
+        .cv-dots { display: flex; justify-content: center; gap: 10px; padding: 0.5rem 0 2.5rem; position: relative; z-index: 5; }
+        .cv-dot { width: 26px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.15); transition: background 0.3s ease, width 0.3s ease; border: 0; padding: 0; }
+        .cv-dot.active { background: var(--accent); width: 42px; }
+
+        .rise-in { transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .rise-in:not(.shown) { opacity: 0; transform: translateY(45px); }
+
         @media (max-width: 900px) {
             .about-page { grid-template-columns: 1fr; text-align: center; gap: 3rem; }
             .about-left { align-items: center; text-align: center; }
@@ -315,6 +322,7 @@
             .motion-canvas, .skill-icon, .spark, .marquee-track { animation: none !important; }
             .scatter-word { transition: none; opacity: 1; transform: none; filter: none; }
             .r-word { transition: none; transform: none; }
+            .rise-in:not(.shown) { opacity: 1; transform: none; }
         }
     </style>
 </head>
@@ -437,6 +445,7 @@
                         <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="Showreel 3"></div>
                     </div>
                 </div>
+                <div class="cv-dots" id="cv-dots"></div>
             </section>
 
             <section class="work-category" id="motion-design">
@@ -740,7 +749,16 @@
         render();
 
         const cvItems = document.querySelectorAll('.coverflow-item'), cvWrapper = document.getElementById('coverflow-wrapper');
-        let cvIndex = 1, throttled = false;
+        let cvIndex = 1;
+
+        const cvDotsWrap = document.getElementById('cv-dots');
+        cvItems.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'cv-dot';
+            dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+            dot.addEventListener('click', () => { cvIndex = i; updateCV(); });
+            cvDotsWrap.appendChild(dot);
+        });
 
         function updateCV() {
             cvItems.forEach((item, i) => {
@@ -750,19 +768,14 @@
                 item.classList.toggle('active', off === 0);
                 item.tabIndex = off === 0 ? 0 : -1;
             });
+            cvDotsWrap.querySelectorAll('.cv-dot').forEach((d, i) => d.classList.toggle('active', i === cvIndex));
         }
         updateCV();
 
-        cvWrapper.addEventListener('wheel', e => {
-            const isAtLast = cvIndex === cvItems.length - 1 && e.deltaY > 0;
-            const isAtFirst = cvIndex === 0 && e.deltaY < 0;
-            if (!isAtLast && !isAtFirst) {
-                e.preventDefault(); 
-                if (throttled) return;
-                if (e.deltaY > 0) cvIndex++; else cvIndex--;
-                updateCV(); throttled = true; setTimeout(() => throttled = false, 400);
-            }
-        }, { passive: false });
+        cvItems.forEach(item => item.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' && cvIndex < cvItems.length - 1) { cvIndex++; updateCV(); e.preventDefault(); }
+            if (e.key === 'ArrowLeft' && cvIndex > 0) { cvIndex--; updateCV(); e.preventDefault(); }
+        }));
 
         let startX = 0, startY = 0; let isDragging = false; let hasSwiped = false;
 
@@ -857,6 +870,22 @@
         }));
         document.querySelectorAll('.marquee-band').forEach(b => marqueeObs.observe(b));
 
+        const riseObs = new IntersectionObserver(entries => entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('shown'); riseObs.unobserve(e.target); }
+        }), { threshold: 0.15 });
+        document.querySelectorAll('.video-card, .sound-card').forEach((el, i) => {
+            el.classList.add('rise-in');
+            el.style.transitionDelay = `${(i % 3) * 0.08}s`;
+            riseObs.observe(el);
+        });
+
+        const cta = document.querySelector('.contact-btn');
+        cta.addEventListener('mousemove', e => {
+            const r = cta.getBoundingClientRect();
+            cta.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px, ${(e.clientY - r.top - r.height / 2) * 0.35}px)`;
+        });
+        cta.addEventListener('mouseleave', () => { cta.style.transform = ''; });
+
         if (!reduceMotion) {
             let sT = window.scrollY, sC = sT, gliding = false;
             const glide = () => {
@@ -866,7 +895,7 @@
                 requestAnimationFrame(glide);
             };
             window.addEventListener('wheel', e => {
-                if (e.ctrlKey || cvWrapper.contains(e.target)) return;
+                if (e.ctrlKey) return;
                 e.preventDefault();
                 const d = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;
                 sT = Math.max(0, Math.min(maxScrollCache, sT + d));
