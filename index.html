@@ -275,6 +275,23 @@
 
         .site-footer { text-align: center; padding: 3rem 5vw; color: var(--text-muted); font-size: 0.8rem; letter-spacing: 2px; border-top: 1px solid var(--border-subtle); }
 
+        .preloader { position: fixed; inset: 0; z-index: 90000; background: #050505; display: flex; align-items: flex-end; justify-content: space-between; padding: 5vh 5vw; transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1); }
+        .preloader.done { transform: translateY(-101%); }
+        .preloader-name { font-family: 'Oswald', sans-serif; font-size: clamp(2rem, 6vw, 4.5rem); font-weight: 700; letter-spacing: 6px; text-transform: uppercase; color: var(--text-light); }
+        .preloader-name em { color: var(--accent); font-style: italic; margin-left: 0.3em; }
+        .preloader-count { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 9vw, 6.5rem); font-weight: 700; line-height: 0.85; color: var(--accent); }
+
+        .marquee-band { overflow: hidden; white-space: nowrap; padding: 2.2rem 0; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); background: rgba(255, 255, 255, 0.015); position: relative; z-index: 2; }
+        .marquee-track { display: inline-flex; align-items: baseline; animation: marqueeMove 26s linear infinite; will-change: transform; }
+        .marquee-band.rev .marquee-track { animation-direction: reverse; }
+        .marquee-track span { font-family: 'Oswald', sans-serif; font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 700; text-transform: uppercase; letter-spacing: 4px; padding-right: 3rem; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.28); }
+        .marquee-track span.solid { color: var(--accent); -webkit-text-stroke: 0; }
+        @keyframes marqueeMove { to { transform: translateX(-50%); } }
+
+        .r-mask { display: inline-block; overflow: hidden; vertical-align: bottom; }
+        .r-word { display: inline-block; transform: translateY(115%); transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
+        .reveal.in .r-word { transform: translateY(0); }
+
         @media (max-width: 900px) {
             .about-page { grid-template-columns: 1fr; text-align: center; gap: 3rem; }
             .about-left { align-items: center; text-align: center; }
@@ -294,12 +311,18 @@
             .nav-links span { margin-left: 12px; font-size: 0.75rem; padding: 5px 8px; } 
         }
         @media (prefers-reduced-motion: reduce) {
-            .motion-canvas, .skill-icon, .spark { animation: none !important; }
+            .motion-canvas, .skill-icon, .spark, .marquee-track { animation: none !important; }
             .scatter-word { transition: none; opacity: 1; transform: none; filter: none; }
+            .r-word { transition: none; transform: none; }
         }
     </style>
 </head>
 <body>
+
+    <div class="preloader" id="preloader" aria-hidden="true">
+        <div class="preloader-name">Steve<em>FX</em></div>
+        <div class="preloader-count" id="preCount">0</div>
+    </div>
 
     <div class="timeline-playhead" id="playhead"></div>
     <div class="cursor-dot" id="cursor-dot"></div>
@@ -340,7 +363,7 @@
                 <div class="about-left">
                     <div class="hello-text">
                         <p>HELLO, I AM</p>
-                        <h2 class="scatter-target">STEVE FX</h2>
+                        <h2 class="reveal">STEVE FX</h2>
                     </div>
                     <div class="glow-container">
                         <div class="spark s1"></div>
@@ -396,8 +419,12 @@
                 </div>
             </section>
 
+            <div class="marquee-band" aria-hidden="true">
+                <div class="marquee-track"><span>Video Editing //</span><span class="solid">Motion Design //</span><span>Kinetic Type //</span><span class="solid">Sound Design //</span><span>Video Editing //</span><span class="solid">Motion Design //</span><span>Kinetic Type //</span><span class="solid">Sound Design //</span></div>
+            </div>
+
             <section class="work-category">
-                <div class="category-header"><h3 class="scatter-target"><span>01 //</span> Top Showreel</h3></div>
+                <div class="category-header"><h3 class="reveal"><span>01 //</span> Top Showreel</h3></div>
                 <div class="coverflow-wrapper" id="coverflow-wrapper">
                     <div class="coverflow-item" tabindex="0" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
                         <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1521133573892-e44906baee46?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="Showreel 1"></div>
@@ -412,7 +439,7 @@
             </section>
 
             <section class="work-category" id="motion-design">
-                <div class="category-header"><h3 class="scatter-target"><span>02 //</span> Motion Design</h3></div>
+                <div class="category-header"><h3 class="reveal"><span>02 //</span> Motion Design</h3></div>
                 <div class="video-grid">
                     <div class="video-card" tabindex="0" data-video="https://player.vimeo.com/video/76979871">
                         <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="Abstract Motion"></div>
@@ -438,7 +465,7 @@
             </section>
 
             <section class="work-category" id="text-animations">
-                <div class="category-header"><h3 class="scatter-target"><span>03 //</span> Kinetic Typography</h3></div>
+                <div class="category-header"><h3 class="reveal"><span>03 //</span> Kinetic Typography</h3></div>
                 <div class="video-grid">
                     <div class="video-card" tabindex="0" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ">
                         <div class="parallax-wrap"><img src="https://images.unsplash.com/photo-1555448248-2571daf6344b?q=80&w=800&auto=format&fit=crop" loading="lazy" decoding="async" alt="Kinetic Text"></div>
@@ -464,7 +491,7 @@
             </section>
 
             <section class="work-category" id="sound-design">
-                <div class="category-header"><h3 class="scatter-target"><span>04 //</span> Soundscapes & Foley</h3></div>
+                <div class="category-header"><h3 class="reveal"><span>04 //</span> Soundscapes & Foley</h3></div>
                 <div class="sound-grid">
                     <div class="sound-card" tabindex="0">
                         <div class="play-btn"><div class="play-icon"></div></div>
@@ -501,8 +528,12 @@
                 </div>
             </section>
 
+            <div class="marquee-band rev" aria-hidden="true">
+                <div class="marquee-track"><span>Have a Project //</span><span class="solid">Let's Talk //</span><span>Have a Project //</span><span class="solid">Let's Talk //</span></div>
+            </div>
+
             <section class="contact-section">
-                <h2 class="scatter-target">Ready to Start?</h2>
+                <h2 class="reveal">Ready to Start?</h2>
                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=steve05fx@gmail.com&su=Portfolio%20Inquiry&body=Hi%20Steve%2C%0D%0A%0D%0A" class="contact-btn" tabindex="0" target="_blank" rel="noopener">Get In Touch</a>
             </section>
 
@@ -518,9 +549,34 @@
     <div class="toast" id="toast" role="status">Sound samples coming soon</div>
 
     <script>
-        window.addEventListener('load', () => {
+        const preEl = document.getElementById('preloader');
+        const preCount = document.getElementById('preCount');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let pageLoaded = false;
+        window.addEventListener('load', () => pageLoaded = true);
+
+        function finishPreloader() {
+            preEl.classList.add('done');
             document.body.classList.add('loaded');
-        });
+            setTimeout(() => preEl.remove(), 1000);
+        }
+
+        if (reduceMotion) {
+            finishPreloader();
+        } else {
+            const DUR = 1600, t0 = performance.now();
+            const step = (now) => {
+                const t = Math.min((now - t0) / DUR, 1);
+                preCount.textContent = Math.floor((1 - Math.pow(1 - t, 3)) * 100);
+                if (t < 1) { requestAnimationFrame(step); return; }
+                const tryFinish = () => {
+                    if (pageLoaded || performance.now() - t0 > 3000) finishPreloader();
+                    else setTimeout(tryFinish, 100);
+                };
+                tryFinish();
+            };
+            requestAnimationFrame(step);
+        }
 
         const scatterTargets = document.querySelectorAll('.scatter-target');
         
@@ -757,6 +813,53 @@
                 toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
             });
         });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            const nodes = Array.from(el.childNodes);
+            el.textContent = '';
+            const frag = document.createDocumentFragment();
+            let idx = 0;
+            nodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    node.nodeValue.split(/(\s+)/).forEach(part => {
+                        if (!part.trim()) { if (part) frag.appendChild(document.createTextNode(part)); return; }
+                        const m = document.createElement('span'); m.className = 'r-mask';
+                        const w = document.createElement('span'); w.className = 'r-word'; w.textContent = part;
+                        w.style.transitionDelay = `${idx++ * 0.07}s`;
+                        m.appendChild(w); frag.appendChild(m);
+                    });
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    const m = document.createElement('span'); m.className = 'r-mask';
+                    const w = document.createElement('span'); w.className = 'r-word';
+                    w.appendChild(node.cloneNode(true));
+                    w.style.transitionDelay = `${idx++ * 0.07}s`;
+                    m.appendChild(w); frag.appendChild(m);
+                }
+            });
+            el.appendChild(frag);
+        });
+
+        const revealObs = new IntersectionObserver(entries => entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('in'); revealObs.unobserve(e.target); }
+        }), { threshold: 0.3 });
+        document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+        if (!reduceMotion) {
+            let sT = window.scrollY, sC = sT, gliding = false;
+            const glide = () => {
+                sC += (sT - sC) * 0.11;
+                if (Math.abs(sT - sC) < 0.5) { window.scrollTo(0, sT); gliding = false; return; }
+                window.scrollTo(0, sC);
+                requestAnimationFrame(glide);
+            };
+            window.addEventListener('wheel', e => {
+                if (e.ctrlKey || cvWrapper.contains(e.target)) return;
+                e.preventDefault();
+                const d = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;
+                sT = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, sT + d));
+                if (!gliding) { gliding = true; requestAnimationFrame(glide); }
+            }, { passive: false });
+        }
     </script>
 </body>
 </html>
