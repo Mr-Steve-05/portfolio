@@ -71,13 +71,13 @@
         body:not(.loaded) .badge,
         body:not(.loaded) nav { opacity: 0 !important; }
 
-        .loaded #text-left { animation: slamLeft 1.4s cubic-bezier(0.1, 1, 0.2, 1) 0s forwards !important; }
-        .loaded #text-right { animation: slamRight 1.4s cubic-bezier(0.1, 1, 0.2, 1) 0s forwards !important; }
-        .loaded .center-graphic img { animation: heroRise 1.4s cubic-bezier(0.1, 1, 0.2, 1) 0s forwards !important; }
-        .loaded #badge-ae { animation: badgePop 1.2s cubic-bezier(0.3, 1.5, 0.4, 1) 0s forwards !important; }
-        .loaded #badge-pr { animation: badgePop 1.2s cubic-bezier(0.3, 1.5, 0.4, 1) 0s forwards !important; }
-        .loaded #badge-dv { animation: badgePop 1.2s cubic-bezier(0.3, 1.5, 0.4, 1) 0s forwards !important; }
-        .loaded nav { animation: navDrop 1s ease 1.2s forwards !important; }
+        .loaded #text-left { animation: slamLeft 1.4s cubic-bezier(0.1, 1, 0.2, 1) 0s backwards !important; }
+        .loaded #text-right { animation: slamRight 1.4s cubic-bezier(0.1, 1, 0.2, 1) 0s backwards !important; }
+        .loaded .center-graphic img { animation: heroRise 1.4s cubic-bezier(0.1, 1, 0.2, 1) 0s backwards !important; }
+        .loaded #badge-ae { animation: badgePop 1.2s cubic-bezier(0.3, 1.5, 0.4, 1) 0s backwards !important; }
+        .loaded #badge-pr { animation: badgePop 1.2s cubic-bezier(0.3, 1.5, 0.4, 1) 0s backwards !important; }
+        .loaded #badge-dv { animation: badgePop 1.2s cubic-bezier(0.3, 1.5, 0.4, 1) 0s backwards !important; }
+        .loaded nav { animation: navDrop 1s ease 1.2s backwards !important; }
 
         @keyframes slamLeft { 0% { transform: translateX(-15vw) scale(1.3); opacity: 0; filter: blur(20px); } 100% { transform: translateX(0vw) scale(1); opacity: 1; filter: blur(0); } }
         @keyframes slamRight { 0% { transform: translateX(15vw) scale(1.3); opacity: 0; filter: blur(20px); } 100% { transform: translateX(0vw) scale(1); opacity: 1; filter: blur(0); } }
@@ -277,11 +277,24 @@
 
         .site-footer { text-align: center; padding: 3rem 5vw; color: var(--text-muted); font-size: 0.8rem; letter-spacing: 2px; border-top: 1px solid var(--border-subtle); }
 
-        .preloader { position: fixed; inset: 0; z-index: 90000; background: #050505; display: flex; align-items: flex-end; justify-content: space-between; padding: 5vh 5vw; transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1); }
+        .preloader { position: fixed; inset: 0; z-index: 90000; background: #050505; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; transition: transform 0.95s cubic-bezier(0.76, 0, 0.24, 1); }
         .preloader.done { transform: translateY(-101%); }
-        .preloader-name { font-family: 'Oswald', sans-serif; font-size: clamp(2rem, 6vw, 4.5rem); font-weight: 700; letter-spacing: 6px; text-transform: uppercase; color: var(--text-light); }
-        .preloader-name em { color: var(--accent); font-style: italic; margin-left: 0.3em; }
-        .preloader-count { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 9vw, 6.5rem); font-weight: 700; line-height: 0.85; color: var(--accent); }
+        .preloader.done .pre-center { opacity: 0; transition: opacity 0.35s ease; }
+        .pre-center { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+        .pre-word { display: flex; align-items: baseline; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: clamp(3rem, 11vw, 7rem); letter-spacing: clamp(4px, 1vw, 12px); color: var(--text-light); line-height: 1; text-transform: uppercase; }
+        .pre-word span { opacity: 0; transform: translateY(46px); filter: blur(10px); animation: preIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .pre-word span:nth-child(2) { animation-delay: 0.07s; }
+        .pre-word span:nth-child(3) { animation-delay: 0.14s; }
+        .pre-word span:nth-child(4) { animation-delay: 0.21s; }
+        .pre-word span:nth-child(5) { animation-delay: 0.28s; }
+        .pre-word span.fx { color: var(--accent); font-style: italic; margin-left: 0.18em; animation-delay: 0.38s; }
+        @keyframes preIn { to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+        .pre-tag { font-size: 0.72rem; letter-spacing: 7px; color: var(--text-muted); text-transform: uppercase; opacity: 0; animation: preIn 0.8s ease 0.6s forwards; }
+        .pre-bar { width: min(340px, 62vw); height: 2px; background: rgba(255, 255, 255, 0.12); overflow: hidden; border-radius: 2px; margin-top: 10px; }
+        .pre-bar i { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: var(--accent); box-shadow: 0 0 14px var(--accent); transform-origin: left; transform: scaleX(0); }
+        .pre-bar { position: relative; }
+        .pre-count { position: absolute; right: 5vw; bottom: 4vh; font-family: 'Oswald', sans-serif; font-size: clamp(2.8rem, 8vw, 5.5rem); font-weight: 700; line-height: 1; color: transparent; -webkit-text-stroke: 1px rgba(0, 210, 255, 0.85); transition: opacity 0.3s ease; }
+        .preloader.done .pre-count { opacity: 0; }
 
         .marquee-band { overflow: hidden; white-space: nowrap; padding: 2.2rem 0; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); background: rgba(255, 255, 255, 0.015); position: relative; z-index: 2; }
         .marquee-track { display: inline-flex; align-items: baseline; animation: marqueeMove 26s linear infinite; will-change: transform; }
@@ -304,6 +317,9 @@
 
         .skip-link { position: fixed; top: -70px; left: 16px; z-index: 200000; background: var(--accent); color: #00131c; padding: 0.7rem 1.2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: top 0.2s ease; }
         .skip-link:focus { top: 16px; }
+
+        .center-graphic::after { content: ''; position: absolute; inset: -1px; border-radius: 12px; pointer-events: none; animation: glowPulse 5s ease-in-out infinite; }
+        @keyframes glowPulse { 0%, 100% { box-shadow: 0 0 40px rgba(0, 210, 255, 0.05); } 50% { box-shadow: 0 0 75px rgba(0, 210, 255, 0.3); } }
 
         .scroll-hint { position: absolute; bottom: 4vh; left: 50%; transform: translateX(-50%); font-size: 0.68rem; letter-spacing: 5px; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 6; transition: opacity 0.5s ease; }
         .scroll-hint span { width: 1px; height: 44px; background: linear-gradient(var(--accent), transparent); animation: hintDrop 1.9s ease-in-out infinite; }
@@ -345,6 +361,8 @@
             .scatter-word { transition: none; opacity: 1; transform: none; filter: none; }
             .r-word { transition: none; transform: none; }
             .rise-in:not(.shown) { opacity: 1; transform: none; }
+            .pre-word span, .pre-tag { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+            .scroll-hint span { animation: none; }
         }
     </style>
 </head>
@@ -353,8 +371,12 @@
     <a class="skip-link" href="#video-work">Skip to content</a>
 
     <div class="preloader" id="preloader" aria-hidden="true">
-        <div class="preloader-name">Steve<em>FX</em></div>
-        <div class="preloader-count" id="preCount">0</div>
+        <div class="pre-center">
+            <div class="pre-word"><span>S</span><span>T</span><span>E</span><span>V</span><span>E</span><span class="fx">FX</span></div>
+            <div class="pre-tag">Professional Video Editor</div>
+            <div class="pre-bar"><i id="preFill"></i></div>
+        </div>
+        <div class="pre-count" id="preCount">0</div>
     </div>
 
     <div class="timeline-playhead" id="playhead"></div>
@@ -590,6 +612,7 @@
     <script>
         const preEl = document.getElementById('preloader');
         const preCount = document.getElementById('preCount');
+        const preFill = document.getElementById('preFill');
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         let pageLoaded = false;
         window.addEventListener('load', () => pageLoaded = true);
@@ -607,7 +630,9 @@
             const DUR = 1600, t0 = performance.now();
             const step = (now) => {
                 const t = Math.min((now - t0) / DUR, 1);
-                preCount.textContent = Math.floor((1 - Math.pow(1 - t, 3)) * 100);
+                const eased = 1 - Math.pow(1 - t, 3);
+                preCount.textContent = Math.floor(eased * 100);
+                preFill.style.transform = `scaleX(${eased})`;
                 if (t < 1) { requestAnimationFrame(step); return; }
                 const tryFinish = () => {
                     if (pageLoaded || performance.now() - t0 > 3000) finishPreloader();
@@ -749,23 +774,8 @@
                 lastApplied = currentScroll;
                 playhead.style.transform = `scaleX(${currentScroll / cachedTotalHeight})`;
 
-                const phase = window.innerHeight * 0.8;
-                let progress = Math.min(currentScroll / phase, 1);
-                let exit = Math.min(progress * 2.5, 1);
-                let fade = 1 - exit;
-
-                textLeft.style.transform = `translateX(${-exit * 50}vw)`;
-                textRight.style.transform = `translateX(${exit * 50}vw)`;
-                centerGraphic.style.transform = `scale(${Math.max(0.8, 1 - exit * 0.2)})`;
+                const progress = Math.min(currentScroll / (window.innerHeight * 0.8), 1);
                 contentLayer.style.transform = `translateY(${Math.max(0, 100 - (progress * 100))}vh)`;
-                textLeft.style.opacity = fade;
-                textRight.style.opacity = fade;
-                centerGraphic.style.opacity = fade;
-
-                badges.forEach((b, i) => {
-                    b.style.opacity = fade;
-                    b.style.transform = `translate(${(i-1)*exit*100}%, ${exit*80}%) scale(${1-exit}) rotate(${exit * 45}deg)`;
-                });
 
                 speedElements.forEach(el => {
                     el.style.transform = `translateY(${currentScroll * parseFloat(el.getAttribute('data-speed'))}px)`;
@@ -779,6 +789,35 @@
                         wrap.style.setProperty('--py', `${viewProgress * 12}%`);
                     }
                 });
+            }
+
+            if (!heroGone) {
+                const exit = Math.min(Math.min(currentScroll / (window.innerHeight * 0.8), 1) * 2.5, 1);
+                const alive = 1 - exit;
+                textLeft.style.opacity = alive;
+                textRight.style.opacity = alive;
+                centerGraphic.style.opacity = alive;
+                badges.forEach(b => { b.style.opacity = alive; });
+                if (alive > 0.001 && !reduceMotion) {
+                    const t = performance.now() * 0.001;
+                    const mx = (curX / window.innerWidth) - 0.5;
+                    const my = (curY / window.innerHeight) - 0.5;
+                    textLeft.style.transform = `translateX(${-exit * 50}vw) translateX(${mx * -16 * alive}px)`;
+                    textRight.style.transform = `translateX(${exit * 50}vw) translateX(${mx * 16 * alive}px)`;
+                    const breath = 1 + Math.sin(t * 1.15) * 0.007 * alive;
+                    centerGraphic.style.transform = `translate(${mx * -14 * alive}px, ${my * -10 * alive}px) scale(${Math.max(0.8, 1 - exit * 0.2) * breath})`;
+                    badges.forEach((b, i) => {
+                        const bob = Math.sin(t * 1.5 + i * 2.2) * 9 * alive;
+                        b.style.transform = `translate(${(i - 1) * exit * 100}%, calc(${exit * 80}% + ${bob}px)) scale(${1 - exit}) rotate(${exit * 45}deg)`;
+                    });
+                } else {
+                    textLeft.style.transform = `translateX(${-exit * 50}vw)`;
+                    textRight.style.transform = `translateX(${exit * 50}vw)`;
+                    centerGraphic.style.transform = `scale(${Math.max(0.8, 1 - exit * 0.2)})`;
+                    badges.forEach((b, i) => {
+                        b.style.transform = `translate(${(i - 1) * exit * 100}%, ${exit * 80}%) scale(${1 - exit}) rotate(${exit * 45}deg)`;
+                    });
+                }
             }
 
             requestAnimationFrame(render);
