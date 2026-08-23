@@ -792,6 +792,15 @@
         const toTopBtn = document.getElementById('to-top');
         let topVisible = false;
 
+        const bands = Array.from(document.querySelectorAll('.marquee-band')).map(b => ({ el: b, track: b.querySelector('.marquee-track'), pos: 0, half: 0, visible: false }));
+        const marqueeObs = new IntersectionObserver(entries => entries.forEach(e => {
+            const s = bands.find(x => x.el === e.target);
+            if (s) s.visible = e.isIntersecting;
+        }), { threshold: 0 });
+        bands.forEach(s => marqueeObs.observe(s.el));
+        window.addEventListener('resize', () => bands.forEach(s => { s.half = 0; }));
+        let velSmooth = 0, prevScrollVel = window.scrollY, lastMarqT = 0;
+
         let currentScroll = 0, targetScroll = window.scrollY;
         let cachedTotalHeight = 1, maxScrollCache = 1;
         const measure = () => {
@@ -1039,15 +1048,6 @@
             if (e.isIntersecting) { e.target.classList.add('in'); revealObs.unobserve(e.target); }
         }), { threshold: 0.3 });
         document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
-
-        const bands = Array.from(document.querySelectorAll('.marquee-band')).map(b => ({ el: b, track: b.querySelector('.marquee-track'), pos: 0, half: 0, visible: false }));
-        const marqueeObs = new IntersectionObserver(entries => entries.forEach(e => {
-            const s = bands.find(x => x.el === e.target);
-            if (s) s.visible = e.isIntersecting;
-        }), { threshold: 0 });
-        bands.forEach(s => marqueeObs.observe(s.el));
-        window.addEventListener('resize', () => bands.forEach(s => { s.half = 0; }));
-        let velSmooth = 0, prevScrollVel = window.scrollY, lastMarqT = 0;
 
         const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
         const makeTilt = el => {
