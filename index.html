@@ -750,6 +750,11 @@
         navItems.forEach(item => item.addEventListener('mouseenter', () => scramble(item)));
         const brandEl = document.querySelector('.nav-brand');
         if (brandEl) brandEl.addEventListener('mouseenter', () => scramble(brandEl));
+        document.querySelectorAll('.about-page h3').forEach(el => el.addEventListener('mouseenter', () => scramble(el)));
+        document.querySelectorAll('.category-header h3').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        });
 
         const cursor = document.getElementById('cursor-dot');
         let curX = window.innerWidth / 2, curY = window.innerHeight / 2, cursorRaf = null;
@@ -807,6 +812,7 @@
             cachedTotalHeight = Math.max(1, document.body.scrollHeight - window.innerHeight);
             maxScrollCache = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
             badges.forEach(b => { const r = b.getBoundingClientRect(); b._cx = r.left + r.width / 2; b._cy = r.top + r.height / 2; });
+            [textLeft, textRight].forEach(el => { const r = el.getBoundingClientRect(); el._cx = r.left + r.width / 2; el._cy = r.top + r.height / 2; });
         };
         window.addEventListener('scroll', () => targetScroll = window.scrollY, { passive: true });
         window.addEventListener('resize', measure);
@@ -862,8 +868,22 @@
                     const t = performance.now() * 0.001;
                     const mx = (curX / window.innerWidth) - 0.5;
                     const my = (curY / window.innerHeight) - 0.5;
-                    textLeft.style.transform = `translateX(${-exit * 50}vw) translateX(${mx * -16 * alive}px)`;
-                    textRight.style.transform = `translateX(${exit * 50}vw) translateX(${mx * 16 * alive}px)`;
+                    [textLeft, textRight].forEach(el => {
+                        let ax = 0, ay = 0, sc = 1;
+                        if (el._cx !== undefined) {
+                            const dx = curX - el._cx, dy = curY - el._cy;
+                            const d = Math.hypot(dx, dy);
+                            const R = 280;
+                            if (d < R && d > 0.01) {
+                                const f = Math.pow(1 - d / R, 2);
+                                ax = dx * f * 0.12; ay = dy * f * 0.12; sc = 1 + f * 0.045;
+                            }
+                        }
+                        if (el._ax === undefined) { el._ax = 0; el._ay = 0; el._sc = 1; }
+                        el._ax += (ax - el._ax) * 0.12; el._ay += (ay - el._ay) * 0.12; el._sc += (sc - el._sc) * 0.12;
+                    });
+                    textLeft.style.transform = `translateX(${-exit * 50}vw) translateX(${(mx * -16 + textLeft._ax).toFixed(1) * alive}px) translateY(${textLeft._ay.toFixed(1)}px) scale(${textLeft._sc.toFixed(3)})`;
+                    textRight.style.transform = `translateX(${exit * 50}vw) translateX(${(mx * 16 + textRight._ax).toFixed(1) * alive}px) translateY(${textRight._ay.toFixed(1)}px) scale(${textRight._sc.toFixed(3)})`;
                     const breath = 1 + Math.sin(t * 1.15) * 0.007 * alive;
                     centerGraphic.style.transform = `translate(${mx * -14 * alive}px, ${my * -10 * alive}px) scale(${Math.max(0.8, 1 - exit * 0.2) * breath})`;
                     badges.forEach((b, i) => {
