@@ -91,6 +91,10 @@
         .cursor-dot { position: fixed; top: -4px; left: -4px; width: 8px; height: 8px; pointer-events: none; z-index: 100000; will-change: transform; }
         .cursor-dot::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), background 0.2s ease, box-shadow 0.2s ease; }
         .cursor-dot.hovering::before { transform: scale(3.5); background: transparent; box-shadow: inset 0 0 0 1px var(--accent), 0 0 15px rgba(0, 210, 255, 0.2); }
+        .cursor-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 8px; letter-spacing: 1px; color: #00131c; opacity: 0; transition: opacity 0.15s ease; pointer-events: none; }
+        .cursor-dot.mode::before { transform: scale(7.5); background: var(--accent); box-shadow: 0 0 25px rgba(0, 210, 255, 0.5); }
+        .cursor-dot.mode .cursor-label { opacity: 1; }
+        body:active .cursor-dot.mode::before { transform: scale(6); }
         @media (hover: none) and (pointer: coarse) { .cursor-dot { display: none !important; } * { cursor: auto !important; } }
 
         /* --- LIQUID GLASS NAV --- */
@@ -232,6 +236,11 @@
         /* --- VIDEO GRID --- */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; padding: 0 5vw; max-width: 1400px; margin: 0 auto; }
         .video-card { position: relative; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; cursor: pointer; box-shadow: 0 15px 40px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.05); background: #0b0b0b; }
+
+        .card-glare::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, 0.22), transparent 45%); opacity: 0; transition: opacity 0.35s ease; pointer-events: none; z-index: 3; }
+        .card-glare:hover::after { opacity: 1; }
+        .tiltable { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease !important; }
+        .tiltable:hover { transition: transform 0.12s ease-out, box-shadow 0.4s ease !important; }
         .video-card .parallax-wrap img { opacity: 0.6; }
         .video-card-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); transition: 0.4s ease; pointer-events: none; }
         
@@ -297,9 +306,7 @@
         .preloader.done .pre-count { opacity: 0; }
 
         .marquee-band { overflow: hidden; white-space: nowrap; padding: 2.2rem 0; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); background: rgba(255, 255, 255, 0.015); position: relative; z-index: 2; }
-        .marquee-track { display: inline-flex; align-items: baseline; animation: marqueeMove 26s linear infinite; will-change: transform; }
-        .marquee-band.rev .marquee-track { animation-direction: reverse; }
-        .marquee-band.paused .marquee-track { animation-play-state: paused; }
+        .marquee-track { display: inline-flex; align-items: baseline; will-change: transform; }
         .marquee-track span { font-family: 'Oswald', sans-serif; font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 700; text-transform: uppercase; letter-spacing: 4px; padding-right: 3rem; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.28); }
         .marquee-track span.solid { color: var(--accent); -webkit-text-stroke: 0; }
         @keyframes marqueeMove { to { transform: translateX(-50%); } }
@@ -387,7 +394,7 @@
     </div>
 
     <div class="timeline-playhead" id="playhead"></div>
-    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-dot" id="cursor-dot"><span class="cursor-label" id="cursor-label"></span></div>
 
     <nav>
         <div class="nav-brand">STEVE.FX</div>
@@ -720,6 +727,30 @@
             navItems.forEach(nav => nav.style.color = 'white');
         });
 
+        const GLYPHS = '!<>-_\\/[]{}=+*^?#';
+        const scramble = el => {
+            if (el.dataset.scrambling) return;
+            el.dataset.scrambling = '1';
+            const original = el.dataset.text || (el.dataset.text = el.textContent);
+            let frame = 0;
+            const total = Math.max(14, original.length * 1.7);
+            const tick = () => {
+                frame++;
+                const settled = Math.floor((frame / total) * original.length);
+                let out = '';
+                for (let i = 0; i < original.length; i++) {
+                    out += i < settled ? original[i] : (original[i] === ' ' ? ' ' : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
+                }
+                el.textContent = out;
+                if (frame < total) requestAnimationFrame(tick);
+                else { el.textContent = original; delete el.dataset.scrambling; }
+            };
+            requestAnimationFrame(tick);
+        };
+        navItems.forEach(item => item.addEventListener('mouseenter', () => scramble(item)));
+        const brandEl = document.querySelector('.nav-brand');
+        if (brandEl) brandEl.addEventListener('mouseenter', () => scramble(brandEl));
+
         const cursor = document.getElementById('cursor-dot');
         let curX = window.innerWidth / 2, curY = window.innerHeight / 2, cursorRaf = null;
         window.addEventListener('mousemove', e => {
@@ -733,9 +764,18 @@
         }, { passive: true });
 
         const interactables = document.querySelectorAll('.nav-links span, .video-card, .sound-card, .coverflow-item, .contact-btn, .lightbox-close');
+        const cursorLabel = document.getElementById('cursor-label');
         interactables.forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('hovering');
+                const m = el.dataset.cursor;
+                cursor.classList.toggle('mode', !!m);
+                if (m) cursorLabel.textContent = m;
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hovering');
+                cursor.classList.remove('mode');
+            });
             if(el.tagName !== 'A') {
                 el.addEventListener('keydown', e => {
                     if(e.key === 'Enter') el.click();
@@ -754,7 +794,11 @@
 
         let currentScroll = 0, targetScroll = window.scrollY;
         let cachedTotalHeight = 1, maxScrollCache = 1;
-        const measure = () => { cachedTotalHeight = Math.max(1, document.body.scrollHeight - window.innerHeight); maxScrollCache = Math.max(1, document.documentElement.scrollHeight - window.innerHeight); };
+        const measure = () => {
+            cachedTotalHeight = Math.max(1, document.body.scrollHeight - window.innerHeight);
+            maxScrollCache = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            badges.forEach(b => { const r = b.getBoundingClientRect(); b._cx = r.left + r.width / 2; b._cy = r.top + r.height / 2; });
+        };
         window.addEventListener('scroll', () => targetScroll = window.scrollY, { passive: true });
         window.addEventListener('resize', measure);
         window.addEventListener('load', measure);
@@ -815,7 +859,19 @@
                     centerGraphic.style.transform = `translate(${mx * -14 * alive}px, ${my * -10 * alive}px) scale(${Math.max(0.8, 1 - exit * 0.2) * breath})`;
                     badges.forEach((b, i) => {
                         const bob = Math.sin(t * 1.5 + i * 2.2) * 9 * alive;
-                        b.style.transform = `translate(${(i - 1) * exit * 100}%, calc(${exit * 80}% + ${bob}px)) scale(${1 - exit}) rotate(${exit * 45}deg)`;
+                        let rx = 0, ry = 0;
+                        if (b._cx !== undefined) {
+                            const dx = curX - b._cx, dy = curY - b._cy;
+                            const d = Math.hypot(dx, dy);
+                            const R = 150;
+                            if (d < R && d > 0.01) {
+                                const f = Math.pow(1 - d / R, 2) * 36;
+                                rx = -(dx / d) * f; ry = -(dy / d) * f;
+                            }
+                        }
+                        if (b._rx === undefined) { b._rx = 0; b._ry = 0; }
+                        b._rx += (rx - b._rx) * 0.14; b._ry += (ry - b._ry) * 0.14;
+                        b.style.transform = `translate(calc(${b._rx.toFixed(1)}px + ${(i - 1) * exit * 100}%), calc(${b._ry.toFixed(1)}px + ${exit * 80}% + ${bob}px)) scale(${1 - exit}) rotate(${exit * 45}deg)`;
                     });
                 } else {
                     textLeft.style.transform = `translateX(${-exit * 50}vw)`;
@@ -825,6 +881,23 @@
                         b.style.transform = `translate(${(i - 1) * exit * 100}%, ${exit * 80}%) scale(${1 - exit}) rotate(${exit * 45}deg)`;
                     });
                 }
+            }
+
+            const nowMs = performance.now();
+            const dt = Math.min(nowMs - (lastMarqT || nowMs), 50);
+            lastMarqT = nowMs;
+            velSmooth += (Math.abs(currentScroll - prevScrollVel) - velSmooth) * 0.1;
+            prevScrollVel = currentScroll;
+            if (!reduceMotion && bands.length) {
+                bands.forEach(s => {
+                    if (!s.visible || !s.track) return;
+                    if (!s.half) s.half = s.track.scrollWidth / 2;
+                    if (!s.half) return;
+                    s.pos -= dt * 0.055 * (1 + Math.min(velSmooth * 0.05, 3)) * (s.el.classList.contains('rev') ? -1 : 1);
+                    if (s.pos <= -s.half) s.pos += s.half;
+                    if (s.pos > 0) s.pos -= s.half;
+                    s.track.style.transform = `translateX(${s.pos.toFixed(1)}px)`;
+                });
             }
 
             requestAnimationFrame(render);
@@ -967,13 +1040,44 @@
         }), { threshold: 0.3 });
         document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
+        const bands = Array.from(document.querySelectorAll('.marquee-band')).map(b => ({ el: b, track: b.querySelector('.marquee-track'), pos: 0, half: 0, visible: false }));
         const marqueeObs = new IntersectionObserver(entries => entries.forEach(e => {
-            e.target.classList.toggle('paused', !e.isIntersecting);
-        }));
-        document.querySelectorAll('.marquee-band').forEach(b => marqueeObs.observe(b));
+            const s = bands.find(x => x.el === e.target);
+            if (s) s.visible = e.isIntersecting;
+        }), { threshold: 0 });
+        bands.forEach(s => marqueeObs.observe(s.el));
+        window.addEventListener('resize', () => bands.forEach(s => { s.half = 0; }));
+        let velSmooth = 0, prevScrollVel = window.scrollY, lastMarqT = 0;
+
+        const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const makeTilt = el => {
+            if (el.dataset.tiltInit) return;
+            el.dataset.tiltInit = '1';
+            el.classList.add('card-glare', 'tiltable');
+            el.addEventListener('pointermove', e => {
+                const r = el.getBoundingClientRect();
+                const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+                el.style.setProperty('--gx', (px * 100).toFixed(1) + '%');
+                el.style.setProperty('--gy', (py * 100).toFixed(1) + '%');
+                el.style.transform = `perspective(900px) rotateX(${((py - 0.5) * -9).toFixed(2)}deg) rotateY(${((px - 0.5) * 9).toFixed(2)}deg)`;
+            });
+            el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+        };
+        document.querySelectorAll('.coverflow-item').forEach(it => {
+            it.classList.add('card-glare');
+            it.addEventListener('pointermove', e => {
+                const r = it.getBoundingClientRect();
+                it.style.setProperty('--gx', (((e.clientX - r.left) / r.width) * 100).toFixed(1) + '%');
+                it.style.setProperty('--gy', (((e.clientY - r.top) / r.height) * 100).toFixed(1) + '%');
+            });
+        });
 
         const riseObs = new IntersectionObserver(entries => entries.forEach(e => {
-            if (e.isIntersecting) { e.target.classList.add('shown'); riseObs.unobserve(e.target); }
+            if (e.isIntersecting) {
+                e.target.classList.add('shown');
+                riseObs.unobserve(e.target);
+                if (finePointer) setTimeout(() => makeTilt(e.target), 900);
+            }
         }), { threshold: 0.15 });
         document.querySelectorAll('.video-card, .sound-card').forEach((el, i) => {
             el.classList.add('rise-in');
@@ -987,6 +1091,7 @@
             cta.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px, ${(e.clientY - r.top - r.height / 2) * 0.35}px)`;
         });
         cta.addEventListener('mouseleave', () => { cta.style.transform = ''; });
+        cta.addEventListener('mouseenter', () => scramble(cta));
 
         toTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
