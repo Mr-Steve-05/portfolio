@@ -355,12 +355,14 @@
             .watermark { font-size: 30vw; }
         }
         @media (max-width: 600px) {
-            .badge-ae { top: 18%; left: 2%; } .badge-pr { top: 72%; left: 8%; } .badge-dv { top: 30%; right: 2%; }
             .coverflow-item { width: 200px; height: 280px; } .coverflow-wrapper { height: 400px; }
-            .massive-title { font-size: clamp(5rem, 28vw, 10rem); } 
-            .center-graphic { width: 60vw; max-width: 250px; }
+            .sticky-container { flex-direction: column; gap: 3vh; padding-top: 12vh; }
+            .massive-title { position: relative; flex-direction: column; align-items: center; gap: 0.5vh; font-size: clamp(4rem, 22vw, 7rem); letter-spacing: -2px; line-height: 0.85; }
+            .title-right { padding-right: 0; }
+            .center-graphic { position: relative; width: min(58vw, 230px); }
+            .badge-ae { top: 46%; left: 6%; } .badge-pr { top: 74%; left: 13%; } .badge-dv { top: 50%; right: 6%; }
             nav { padding: 1.2rem 6vw; width: 95%; top: 15px; letter-spacing: 2px; }
-            .nav-links span { margin-left: 12px; font-size: 0.75rem; padding: 5px 8px; } 
+            .nav-links span { margin-left: 12px; font-size: 0.75rem; padding: 5px 8px; }
         }
         @media (prefers-reduced-motion: reduce) {
             .motion-canvas, .hero-glow, .skill-icon, .spark, .marquee-track { animation: none !important; }
