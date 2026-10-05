@@ -124,27 +124,18 @@
         .nav-hover-pill { position: absolute; top: 50%; left: 0; transform: translateY(-50%); height: 38px; width: 0px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.35); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(255, 255, 255, 0.05); border-radius: 30px; opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 0; }
         .nav-links span { cursor: pointer; padding: 8px 18px; margin-left: 5px; transition: color 0.3s; position: relative; z-index: 1; }
         .nav-links span:hover { color: var(--accent); }
-
-        /* --- HERO SECTION --- */
-        .sticky-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 10; background-color: var(--bg-dark); }
-        
-        .hero-glow { position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 62vmin; height: 62vmin; border-radius: 50%; z-index: 0; pointer-events: none; background: radial-gradient(circle, rgba(0, 184, 234, 0.22) 0%, rgba(0, 184, 234, 0.08) 45%, transparent 70%); animation: glowBreath 7s ease-in-out infinite; will-change: transform, opacity; box-shadow: 0 0 80px 20px rgba(0, 184, 234, 0.12); }
-        @keyframes glowBreath { 50% { opacity: 0.55; transform: scale(1.1); } }
-        .hero-gone .hero-glow { visibility: hidden; }
-
-        .massive-title { position: absolute; width: 100%; display: flex; justify-content: center; font-family: 'Oswald', sans-serif; font-size: clamp(6rem, 18vw, 22rem); font-weight: 700; line-height: 0.8; text-transform: uppercase; letter-spacing: -4px; z-index: 1; white-space: nowrap; text-shadow: 0 10px 30px rgba(0,0,0,0.5); will-change: transform, opacity; }
-        .title-left { color: var(--text-light); text-shadow: 0 0 40px rgba(0, 184, 234, 0.25), 0 0 80px rgba(0, 184, 234, 0.12); }
-        .title-right { color: var(--accent); font-style: italic; padding-right: 2vw; text-shadow: 0 0 30px rgba(0, 184, 234, 0.45), 0 0 60px rgba(0, 184, 234, 0.2); } 
-
-        .center-graphic { position: absolute; width: 90vw; max-width: 400px; aspect-ratio: 4/5; height: auto; z-index: 5; overflow: hidden; border-radius: 18px; border: 1px solid var(--border-strong); box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 60px -12px rgba(57,145,255,0.35); will-change: transform, opacity; }
-        .center-graphic img { width: 100%; height: 100%; object-fit: cover; opacity: 1; transform: scale(1.0); }
-
-        .badge { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 6; font-family: 'Space Grotesk', sans-serif; font-weight: 800; will-change: transform, opacity; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(255, 255, 255, 0.05); }
-        .badge-ae { width: clamp(60px, 12vw, 100px); height: clamp(60px, 12vw, 100px); top: 20%; left: 10%; background: rgba(0, 0, 92, 0.4); color: var(--color-ae-text); border: 1px solid rgba(153, 153, 255, 0.4); border-top: 1px solid rgba(153, 153, 255, 0.8); font-size: clamp(1.2rem, 3vw, 2.2rem); }
-        .badge-pr { width: clamp(60px, 12vw, 100px); height: clamp(60px, 12vw, 100px); top: 68%; left: 20%; background: rgba(0, 0, 92, 0.4); color: var(--color-pr-text); border: 1px solid rgba(234, 119, 255, 0.4); border-top: 1px solid rgba(234, 119, 255, 0.8); font-size: clamp(1.2rem, 3vw, 2.2rem); }
-        .badge-dv { width: clamp(65px, 13vw, 110px); height: clamp(65px, 13vw, 110px); top: 38%; right: 10%; background-image: url('DV.jpg'); background-size: 110%; background-position: center; border: 2px solid rgba(255, 255, 255, 0.2); border-top: 2px solid rgba(0, 184, 234, 0.7); }
     </style>
 </head>
 <body>
+    <nav>
+        <div class="nav-brand">STEVE.FX</div>
+        <div class="nav-links">
+            <span>PROFILE</span>
+            <span>MOTION</span>
+            <span>TEXT</span>
+            <span>SOUND</span>
+        </div>
+    </nav>
+    <div style="padding:120px 20px">Loading full content...</div>
 </body>
 </html>
